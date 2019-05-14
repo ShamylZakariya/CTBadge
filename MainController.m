@@ -21,8 +21,6 @@
     [largeBadgeView setImage:[myBadge largeBadgeForValue:value]];
     [smallBadgeView setImage:[myBadge smallBadgeForValue:value]];
     [myBadge badgeApplicationDockIconWithValue:value insetX:3 y:0];
-    
-    //[[[myBadge largeBadgeForValue:value] TIFFRepresentation] writeToFile:@"/tmp/badge.tif" atomically:NO];
 }
 
 - (IBAction)setBadgeColor:(id)sender
@@ -42,13 +40,14 @@
 - (IBAction)setApplicationIcon:(id)sender
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    
-    int result = [openPanel runModalForDirectory:NSHomeDirectory() file:nil types:[NSArray arrayWithObject:@"icns"]];
-    
-    if(result == NSOKButton)
-    {
-        [self application:nil openFile:[openPanel filename]];
-    }
+    openPanel.directoryURL = [NSURL URLWithString:NSHomeDirectory()];
+    openPanel.allowedFileTypes = @[@"icns"];
+    [openPanel beginSheetModalForWindow: settingsWindow completionHandler:^(NSModalResponse result) {
+        if (result == NSModalResponseOK)
+        {
+            [self application:nil openFile:[openPanel URL].path];
+        }
+    }];
 }
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename

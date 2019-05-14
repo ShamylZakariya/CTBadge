@@ -9,9 +9,9 @@
     CTBadge *myBadge;
     
     IBOutlet id scroller;
-    
     IBOutlet id largeBadgeView;
     IBOutlet id smallBadgeView;
+    IBOutlet NSWindow* settingsWindow;
 }
 
 - (IBAction)setBadgeValue:(id)sender;

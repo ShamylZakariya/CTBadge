@@ -186,7 +186,7 @@ const float CTSmallLabelSize = 11.;
     
     [badgeImage lockFocus];
     [badgeGradient drawInRect:NSMakeRect(origin.x, origin.y, floorf(badgeSize.width), floorf(badgeSize.height)) angle:angle];			//apply the gradient
-    [badgeMask compositeToPoint:origin operation: NSCompositeDestinationAtop];															//knock out the badge area
+    [badgeMask drawAtPoint:origin fromRect:NSMakeRect(0,0,badgeMask.size.width, badgeMask.size.height) operation:NSCompositingOperationDestinationAtop fraction:1];
     [label drawInRect:NSMakeRect(origin.x+floorf((badgeSize.width-labelSize.width)/2), origin.y+floorf((badgeSize.height-labelSize.height)/2), badgeSize.width, labelSize.height)];	//draw label in center
     [badgeImage unlockFocus];
     
@@ -202,7 +202,9 @@ const float CTSmallLabelSize = 11.;
     [theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
     [theShadow set];
     [theShadow release];
-    [badgeImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+
+    [badgeImage drawAtPoint:NSZeroPoint fromRect:NSMakeRect(0,0,badgeImage.size.width, badgeImage.size.height) operation:NSCompositingOperationSourceOver fraction:1];
+
     [NSGraphicsContext restoreGraphicsState];
     [image unlockFocus];
     
@@ -221,7 +223,11 @@ const float CTSmallLabelSize = 11.;
     //draw large icon in the upper right corner of the overlay image
     [overlayImage lockFocus];
     NSSize badgeSize = [badgeImage size];
-    [badgeImage compositeToPoint:NSMakePoint(128-dx-badgeSize.width,128-dy-badgeSize.height) operation:NSCompositeSourceOver];
+    
+    [badgeImage drawAtPoint:NSMakePoint(128-dx-badgeSize.width,128-dy-badgeSize.height)
+                   fromRect:NSMakeRect(0, 0, badgeImage.size.width, badgeImage.size.height)
+                  operation:NSCompositingOperationSourceOver fraction:1];
+    
     [overlayImage unlockFocus];
     
     return [overlayImage autorelease];
@@ -234,7 +240,9 @@ const float CTSmallLabelSize = 11.;
     
     //Put the appIcon underneath the badgeOverlay
     [badgeOverlay lockFocus];
-    [appIcon compositeToPoint:NSZeroPoint operation:NSCompositeDestinationOver];
+
+    [appIcon drawAtPoint:NSZeroPoint fromRect:NSMakeRect(0,0,appIcon.size.width, appIcon.size.height) operation:NSCompositingOperationDestinationOver fraction:1];
+
     [badgeOverlay unlockFocus];
     
     [NSApp setApplicationIconImage:badgeOverlay];
@@ -272,7 +280,7 @@ const float CTSmallLabelSize = 11.;
     else
         labelFont = [NSFont fontWithName:@"Helvetica-Bold" size:size];
     
-    NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];[pStyle setAlignment:NSCenterTextAlignment];
+    NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];[pStyle setAlignment:NSTextAlignmentCenter];
     NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[self labelColor], NSForegroundColorAttributeName,
                                 labelFont        , NSFontAttributeName           , nil];
     [pStyle release];
@@ -311,7 +319,6 @@ const float CTSmallLabelSize = 11.;
     if(size > 0 && size != [badgeMask size].height)
     {
         [badgeMask setName:nil];
-        [badgeMask setScalesWhenResized:YES];
         [badgeMask setSize:NSMakeSize([badgeMask size].width*(size/[badgeMask size].height), size)];
     }
     
