@@ -8,10 +8,10 @@
 {
     CTBadge *myBadge;
     
-    IBOutlet id scroller;
-    IBOutlet id largeBadgeView;
-    IBOutlet id smallBadgeView;
-    IBOutlet NSWindow* settingsWindow;
+    __weak IBOutlet id scroller;
+    __weak IBOutlet id largeBadgeView;
+    __weak IBOutlet id smallBadgeView;
+    __weak IBOutlet NSWindow* settingsWindow;
 }
 
 - (IBAction)setBadgeValue:(id)sender;

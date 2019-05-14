@@ -40,31 +40,20 @@ const float CTSmallLabelSize = 11.;
     return self;
 }
 
-- (void)dealloc
-{
-    if(badgeColor != nil)
-        [badgeColor release];
-    if(labelColor != nil)
-        [labelColor release];
-    
-    [super dealloc];
-}
-
 + (CTBadge *)systemBadge
 {
-    id newInstance = [[[self class] alloc] init];
-    
-    return [newInstance autorelease];
+    CTBadge* newInstance = [[[self class] alloc] init];
+    return newInstance;
 }
 
 + (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor;
 {
-    id newInstance = [[[self class] alloc] init];
+    CTBadge* newInstance = [[[self class] alloc] init];
     
     [newInstance setBadgeColor:badgeColor];
     [newInstance setLabelColor:labelColor];
     
-    return [newInstance autorelease];
+    return newInstance;
 }
 #pragma mark -
 
@@ -72,19 +61,11 @@ const float CTSmallLabelSize = 11.;
 #pragma mark Appearance
 - (void)setBadgeColor:(NSColor *)theColor;
 {
-    if(badgeColor != nil)
-        [badgeColor release];
-    
     badgeColor = theColor;
-    [badgeColor retain];
 }
 - (void)setLabelColor:(NSColor *)theColor;
 {
-    if(labelColor != nil)
-        [labelColor release];
-    
     labelColor = theColor;
-    [labelColor retain];
 }
 
 - (NSColor *)badgeColor
@@ -201,17 +182,13 @@ const float CTSmallLabelSize = 11.;
     [theShadow setShadowBlurRadius:shadowBlurRadius];
     [theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
     [theShadow set];
-    [theShadow release];
-
+    
     [badgeImage drawAtPoint:NSZeroPoint fromRect:NSMakeRect(0,0,badgeImage.size.width, badgeImage.size.height) operation:NSCompositingOperationSourceOver fraction:1];
-
+    
     [NSGraphicsContext restoreGraphicsState];
     [image unlockFocus];
-    
-    [label release];
-    [badgeImage release];
-    
-    return [image autorelease];
+
+    return image;
 }
 
 
@@ -230,7 +207,7 @@ const float CTSmallLabelSize = 11.;
     
     [overlayImage unlockFocus];
     
-    return [overlayImage autorelease];
+    return overlayImage;
 }
 
 - (void)badgeApplicationDockIconWithString:(NSString *)string insetX:(float)dx y:(float)dy;
@@ -240,9 +217,9 @@ const float CTSmallLabelSize = 11.;
     
     //Put the appIcon underneath the badgeOverlay
     [badgeOverlay lockFocus];
-
+    
     [appIcon drawAtPoint:NSZeroPoint fromRect:NSMakeRect(0,0,appIcon.size.width, appIcon.size.height) operation:NSCompositingOperationDestinationOver fraction:1];
-
+    
     [badgeOverlay unlockFocus];
     
     [NSApp setApplicationIconImage:badgeOverlay];
@@ -267,7 +244,7 @@ const float CTSmallLabelSize = 11.;
                              [self badgeColor], 1/3.,
                              [[self badgeColor] shadowWithLevel:1/3.], 1.0, nil];
     
-    return [aGradient autorelease];
+    return aGradient;
 }
 
 - (NSAttributedString *)labelForString:(NSString *)label size:(unsigned)size
@@ -281,17 +258,17 @@ const float CTSmallLabelSize = 11.;
         labelFont = [NSFont fontWithName:@"Helvetica-Bold" size:size];
     
     NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];[pStyle setAlignment:NSTextAlignmentCenter];
-    NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[self labelColor], NSForegroundColorAttributeName,
-                                labelFont        , NSFontAttributeName           , nil];
-    [pStyle release];
+    
+    NSDictionary *attributes = @{
+                                 NSForegroundColorAttributeName :[self labelColor],
+                                 NSFontAttributeName: labelFont
+                                 };
     
     //Label stuff
     if([label length] >= 6)	//replace with summarized string - ellipses at end and a zero-width space to trick us into using the 5-wide badge
         label = [NSString stringWithFormat:@"%@%@", [label substringToIndex:3], [NSString stringWithUTF8String:"\xe2\x80\xa6\xe2\x80\x8b"]];
     
     NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:label attributes:attributes];
-    [attributes release];
-    
     return attributedString;
 }
 
