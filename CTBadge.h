@@ -17,10 +17,10 @@ extern const float CTLargeLabelSize;
 extern const float CTSmallLabelSize;
 
 @interface CTBadge : NSObject
-  {
-  NSColor *badgeColor;
-  NSColor *labelColor;
-  }
+{
+    NSColor *badgeColor;
+    NSColor *labelColor;
+}
 
 + (CTBadge *)systemBadge;																//Classic white on red badge
 + (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor;		//Badge of any color scheme
@@ -31,8 +31,8 @@ extern const float CTSmallLabelSize;
 - (NSImage *)largeBadgeForString:(NSString *)string;
 - (NSImage *)badgeOfSize:(float)size forValue:(unsigned)value;	   //A badge of arbitrary size,
 - (NSImage *)badgeOfSize:(float)size forString:(NSString *)string; //	<size> is the size in pixels of the badge
-																   //	not counting the shadow effect
-																   //	(image returned will be larger than <size>)
+//	not counting the shadow effect
+//	(image returned will be larger than <size>)
 
 - (NSImage *)badgeOverlayImageForValue:(unsigned)value insetX:(float)dx y:(float)dy;		//Returns a transparent 128x128 image
 - (NSImage *)badgeOverlayImageForString:(NSString *)string insetX:(float)dx y:(float)dy;	//  with Large badge inset dx/dy from the upper right

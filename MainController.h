@@ -5,14 +5,14 @@
 #import "CTBadge.h"
 
 @interface MainController : NSObject
-  {
-  CTBadge *myBadge;
-  
-  IBOutlet id scroller;
-  
-  IBOutlet id largeBadgeView;
-  IBOutlet id smallBadgeView;
-  }
+{
+    CTBadge *myBadge;
+    
+    IBOutlet id scroller;
+    
+    IBOutlet id largeBadgeView;
+    IBOutlet id smallBadgeView;
+}
 
 - (IBAction)setBadgeValue:(id)sender;
 - (IBAction)setBadgeColor:(id)sender;
