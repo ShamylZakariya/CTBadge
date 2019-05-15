@@ -25,17 +25,22 @@
 
 - (IBAction)setBadgeColor:(id)sender
 {
-    [myBadge setBadgeColor:[sender color]];
+    myBadge.badgeColor = [sender color];
     [self setBadgeValue:scroller];
 }
 
 
 - (IBAction)setLabelColor:(id)sender
 {
-    [myBadge setLabelColor:[sender color]];
+    myBadge.labelColor = [sender color];
     [self setBadgeValue:scroller];
 }
 
+- (IBAction)setBadgeGradientIntensity:(id)sender
+{
+    myBadge.badgeGradientIntensity = [sender state] == NSControlStateValueOn ? 1 : 0;
+    [self setBadgeValue:scroller];
+}
 
 - (IBAction)setApplicationIcon:(id)sender
 {

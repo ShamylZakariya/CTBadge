@@ -17,6 +17,7 @@
 - (IBAction)setBadgeValue:(id)sender;
 - (IBAction)setBadgeColor:(id)sender;
 - (IBAction)setLabelColor:(id)sender;
+- (IBAction)setBadgeGradientIntensity:(id)sender;
 
 - (IBAction)setApplicationIcon:(id)sender;
 

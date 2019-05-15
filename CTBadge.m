@@ -25,17 +25,17 @@ const float CTSmallLabelSize = 11.;
 
 @implementation CTBadge
 
+@synthesize badgeColor, labelColor, badgeGradientIntensity;
+
 - (id)init
 {
     self = [super init];
     
     if (self != nil)
     {
-        badgeColor = nil;
-        labelColor = nil;
-        
-        [self setBadgeColor:[NSColor redColor]];
-        [self setLabelColor:[NSColor whiteColor]];
+        self.badgeColor = [NSColor redColor];
+        self.labelColor = [NSColor whiteColor];
+        self.badgeGradientIntensity = 1;
     }
     return self;
 }
@@ -46,38 +46,17 @@ const float CTSmallLabelSize = 11.;
     return newInstance;
 }
 
-+ (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor;
++ (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor gradientIntensity:(CGFloat) intensity
 {
     CTBadge* newInstance = [[[self class] alloc] init];
     
-    [newInstance setBadgeColor:badgeColor];
-    [newInstance setLabelColor:labelColor];
+    newInstance.badgeColor = badgeColor;
+    newInstance.labelColor = labelColor;
+    newInstance.badgeGradientIntensity = intensity;
     
     return newInstance;
 }
 #pragma mark -
-
-
-#pragma mark Appearance
-- (void)setBadgeColor:(NSColor *)theColor;
-{
-    badgeColor = theColor;
-}
-- (void)setLabelColor:(NSColor *)theColor;
-{
-    labelColor = theColor;
-}
-
-- (NSColor *)badgeColor
-{
-    return badgeColor;
-}
-- (NSColor *)labelColor
-{
-    return labelColor;
-}
-#pragma mark -
-
 
 #pragma mark Drawing
 - (NSImage *)smallBadgeForValue:(unsigned)value		//does drawing in it's own special way
@@ -218,7 +197,7 @@ const float CTSmallLabelSize = 11.;
     //Put the appIcon underneath the badgeOverlay
     [badgeOverlay lockFocus];
     
-    [appIcon drawAtPoint:NSZeroPoint fromRect:NSMakeRect(0,0,appIcon.size.width, appIcon.size.height) operation:NSCompositingOperationDestinationOver fraction:1];
+    [appIcon drawInRect:NSMakeRect(0,0,badgeOverlay.size.width, badgeOverlay.size.height) fromRect:NSMakeRect(0,0,appIcon.size.width, appIcon.size.height) operation:NSCompositingOperationDestinationOver fraction:1];
     
     [badgeOverlay unlockFocus];
     
@@ -240,11 +219,11 @@ const float CTSmallLabelSize = 11.;
 #pragma mark Misc.
 - (NSGradient *)badgeGradient
 {
-    NSGradient *aGradient = [[NSGradient alloc] initWithColorsAndLocations:[self badgeColor], 0.0,
-                             [self badgeColor], 1/3.,
-                             [[self badgeColor] shadowWithLevel:1/3.], 1.0, nil];
-    
-    return aGradient;
+    CGFloat i = MIN(MAX(self.badgeGradientIntensity, 0.0), 1.0) / 3.0;
+    return [[NSGradient alloc] initWithColorsAndLocations:
+                             [self.badgeColor highlightWithLevel:i], 0.0,
+                             self.badgeColor, 1/3.,
+                             [self.badgeColor shadowWithLevel:i], 1.0, nil];
 }
 
 - (NSAttributedString *)labelForString:(NSString *)label size:(unsigned)size

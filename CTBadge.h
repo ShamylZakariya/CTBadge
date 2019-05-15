@@ -18,12 +18,10 @@ extern const float CTSmallLabelSize;
 
 @interface CTBadge : NSObject
 {
-    NSColor *badgeColor;
-    NSColor *labelColor;
 }
 
 + (CTBadge *)systemBadge;																//Classic white on red badge
-+ (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor;		//Badge of any color scheme
++ (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor gradientIntensity:(CGFloat) intensity;		//Badge of any color scheme
 
 - (NSImage *)smallBadgeForValue:(unsigned)value;				   //Image to use during drag operations
 - (NSImage *)smallBadgeForString:(NSString *)string;
@@ -39,10 +37,8 @@ extern const float CTSmallLabelSize;
 - (void)badgeApplicationDockIconWithValue:(unsigned)value insetX:(float)dx y:(float)dy;		//Badges the Application's icon with <value>
 - (void)badgeApplicationDockIconWithString:(NSString *)string insetX:(float)dx y:(float)dy; //	and puts it on the dock
 
-- (void)setBadgeColor:(NSColor *)theColor;					//Sets the color used on badge
-- (void)setLabelColor:(NSColor *)theColor;					//Sets the color of the label
-
-- (NSColor *)badgeColor;									//Color currently being used on the badge
-- (NSColor *)labelColor;									//Color currently being used on the label
+@property (readwrite) NSColor* badgeColor;
+@property (readwrite) NSColor* labelColor;
+@property (readwrite) CGFloat badgeGradientIntensity;
 
 @end
