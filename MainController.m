@@ -3,63 +3,66 @@
 @implementation MainController
 
 - (void)awakeFromNib
-  {
-  myBadge = [[CTBadge alloc] init];
-  [self setBadgeValue:scroller];
-  [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
-  }
+{
+    myBadge = [[CTBadge alloc] init];
+    [self setBadgeValue:scroller];
+    [[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+}
 
 - (void)windowWillClose:(NSNotification *)aNotification
-  {
-  RestoreApplicationDockTileImage();
-  [NSApp terminate:self];
-  }
+{
+    [NSApp terminate:self];
+}
 
 - (IBAction)setBadgeValue:(id)sender
-  {
-  int value = [sender intValue];
-  
-  [largeBadgeView setImage:[myBadge largeBadgeForValue:value]];
-  [smallBadgeView setImage:[myBadge smallBadgeForValue:value]];
-  [myBadge badgeApplicationDockIconWithValue:value insetX:3 y:0];
-  
-  //[[[myBadge largeBadgeForValue:value] TIFFRepresentation] writeToFile:@"/tmp/badge.tif" atomically:NO];
-  }
+{
+    int value = [sender intValue];
+    
+    [largeBadgeView setImage:[myBadge largeBadgeForValue:value]];
+    [smallBadgeView setImage:[myBadge smallBadgeForValue:value]];
+    [myBadge badgeApplicationDockIconWithValue:value insetX:3 y:0];
+}
 
 - (IBAction)setBadgeColor:(id)sender
-  {
-  [myBadge setBadgeColor:[sender color]];
-  [self setBadgeValue:scroller];
-  }
+{
+    myBadge.badgeColor = [sender color];
+    [self setBadgeValue:scroller];
+}
 
 
 - (IBAction)setLabelColor:(id)sender
-  {
-  [myBadge setLabelColor:[sender color]];
-  [self setBadgeValue:scroller];
-  }
+{
+    myBadge.labelColor = [sender color];
+    [self setBadgeValue:scroller];
+}
 
+- (IBAction)setBadgeGradientIntensity:(id)sender
+{
+    myBadge.badgeGradientIntensity = [sender state] == NSControlStateValueOn ? 1 : 0;
+    [self setBadgeValue:scroller];
+}
 
 - (IBAction)setApplicationIcon:(id)sender
-  {
-  NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-  
-  int result = [openPanel runModalForDirectory:NSHomeDirectory() file:nil types:[NSArray arrayWithObject:@"icns"]];
-  
-  if(result == NSOKButton)
-	{
-	[self application:nil openFile:[openPanel filename]];
-	}
-  }
+{
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    openPanel.directoryURL = [NSURL URLWithString:NSHomeDirectory()];
+    openPanel.allowedFileTypes = @[@"icns"];
+    [openPanel beginSheetModalForWindow: settingsWindow completionHandler:^(NSModalResponse result) {
+        if (result == NSModalResponseOK)
+        {
+            [self application:nil openFile:[openPanel URL].path];
+        }
+    }];
+}
 
 - (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
-  {
-  NSImage *newAppIcon = [[NSImage alloc] initWithContentsOfFile:filename];
-  [(NSImage *)[NSImage imageNamed:@"NSApplicationIcon"] setName:nil];
-  [newAppIcon setName:@"NSApplicationIcon"];
-  
-  [self setBadgeValue:scroller];
-  return YES;
-  }
+{
+    NSImage *newAppIcon = [[NSImage alloc] initWithContentsOfFile:filename];
+    [(NSImage *)[NSImage imageNamed:@"NSApplicationIcon"] setName:nil];
+    [newAppIcon setName:@"NSApplicationIcon"];
+    
+    [self setBadgeValue:scroller];
+    return YES;
+}
 
 @end
