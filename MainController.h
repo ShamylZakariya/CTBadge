@@ -1,13 +1,12 @@
 /* MainController */
 
-#import <Cocoa/Cocoa.h>
-#import <Carbon/Carbon.h>
 #import "CTBadge.h"
+#import <Carbon/Carbon.h>
+#import <Cocoa/Cocoa.h>
 
-@interface MainController : NSObject
-{
-    CTBadge *myBadge;
-    
+@interface MainController : NSObject {
+    CTBadge* myBadge;
+
     __weak IBOutlet id scroller;
     __weak IBOutlet id largeBadgeView;
     __weak IBOutlet id smallBadgeView;
